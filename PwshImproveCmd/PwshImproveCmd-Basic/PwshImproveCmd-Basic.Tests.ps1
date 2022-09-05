@@ -52,6 +52,17 @@ Describe "Select-ObjectImproved" {
         }|Should -Be @(123)
     }
 }
+Describe "Compare-ArrayItems"{
+    It "Compare Array Length Mismatch"{
+        Compare-ArrayItems @(1212),@(2323,443434)|Should -Be $false
+    }
+    It "Compare Array Content Mismatch"{
+        Compare-ArrayItems @(1212,23232),@(2323,443434)|Should -Be $false
+    }
+    It "Compare Array Content match"{
+        Compare-ArrayItems @(1212,23232),@(1212,23232)|Should -Be $false
+    }
+}
 AfterAll{
 
 }

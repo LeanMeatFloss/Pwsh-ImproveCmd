@@ -11,6 +11,32 @@ function Join-PathImproved {
         Join-Path (Resolve-PathImproved $LeftPath) ($RightPath|Resolve-PathImproved)
     }    
 }
+function Compare-ArrayItems{
+    param(
+        [array[]]
+        $CompareArrays
+    )
+    process{
+        # compare length equal
+        $startLength=$CompareArrays[0].Length
+        foreach ($currentItemName in $CompareArrays) {
+            if($currentItemName.Length -ne $startLength){
+                return $false
+            }
+        }
+        for ($i = 1; $i -lt $CompareArrays.Count; $i++) {
+            if($CompareArrays[$i].Length -ne $startLength){
+                return $false
+            }
+            for ($j = 0; $j -lt $CompareArrays[$j].Count; $j++) {
+                if($CompareArrays[$j] -ne $CompareArrays[$j-1]){
+                    return $false
+                }
+            }
+        }
+        return $true
+    }
+}
 function Resolve-PathImproved{
     param(
         [parameter(ValueFromPipeline,Position=1)]
