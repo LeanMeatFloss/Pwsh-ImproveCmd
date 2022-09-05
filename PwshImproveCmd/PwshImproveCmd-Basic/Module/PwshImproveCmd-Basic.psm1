@@ -11,6 +11,21 @@ function Join-PathImproved {
         Join-Path (Resolve-PathImproved $LeftPath) ($RightPath|Resolve-PathImproved)
     }    
 }
+function Rename-ItemToBak{
+    param(
+        [parameter(ValueFromPipeline)]
+        [string]
+        $FilePath
+    )
+    process{
+        if(Test-Path $FilePath){
+            if(Test-Path "$FilePath.bak"){
+                Remove-Item "$FilePath.bak" -Force
+            }
+            Rename-Item -Path $FilePath -NewName "$FilePath.bak" -Force
+        }
+    }
+}
 function Resolve-PathImproved{
     param(
         [parameter(ValueFromPipeline,Position=1)]
