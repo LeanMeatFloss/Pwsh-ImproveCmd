@@ -63,6 +63,22 @@ Describe "Compare-ArrayItems"{
         Compare-ArrayItems @(1212,23232),@(1212,23232)|Should -Be $false
     }
 }
+Describe "Rename-ItemToBak"{
+    It "Test rename behavior"{   
+        Mock -ModuleName PwshImproveCmd-Basic Test-Path{
+            return $true
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Remove-Item{
+            return $true
+        }   
+        Mock -ModuleName PwshImproveCmd-Basic Rename-Item{
+            
+        }   
+        "testhelper"|Rename-ItemToBak
+        Should -Invoke -ModuleName PwshImproveCmd-Basic -CommandName 'Test-Path' -Times 1 -ParameterFilter {$PesterBoundParameters["Path"]-eq "testhelper"}
+        Should -Invoke -ModuleName PwshImproveCmd-Basic -CommandName 'Test-Path' -Times 1 -ParameterFilter {$PesterBoundParameters["Path"]-eq "testhelper.bak"}
+    }
+}
 AfterAll{
 
 }

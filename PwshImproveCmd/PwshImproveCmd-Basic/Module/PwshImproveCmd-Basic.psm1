@@ -11,7 +11,6 @@ function Join-PathImproved {
         Join-Path (Resolve-PathImproved $LeftPath) ($RightPath|Resolve-PathImproved)
     }    
 }
-<<<<<<< HEAD
 function Rename-ItemToBak{
     param(
         [parameter(ValueFromPipeline)]
@@ -25,7 +24,8 @@ function Rename-ItemToBak{
             }
             Rename-Item -Path $FilePath -NewName "$FilePath.bak" -Force
         }
-=======
+    }
+}
 function Compare-ArrayItems{
     param(
         [array[]]
@@ -50,7 +50,6 @@ function Compare-ArrayItems{
             }
         }
         return $true
->>>>>>> 5c663f3e6ac10298d3dd491998b4a8fba5b7c961
     }
 }
 function Resolve-PathImproved{
