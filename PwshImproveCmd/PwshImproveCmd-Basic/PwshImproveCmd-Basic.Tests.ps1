@@ -1,5 +1,5 @@
 BeforeAll{
-    $env:PSModulePath+=[IO.Path]::PathSeparator+(Resolve-Path "$PSScriptRoot/..")
+    $env:PSModulePath=(Resolve-Path "$PSScriptRoot/..").Path+[IO.Path]::PathSeparator+$env:PSModulePath
     Import-Module PwshImproveCmd-Basic -Force
 }
 Describe "Get-FileNameFromPath" {

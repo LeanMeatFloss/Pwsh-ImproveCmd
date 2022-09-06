@@ -4,8 +4,8 @@ function Join-PathImproved {
         [string]
         $LeftPath,
         [parameter(Position=1)]
-        [string[]]
-        $RightPath=@("")
+        [string]
+        $RightPath
     )
     process{
         Join-Path (Resolve-PathImproved $LeftPath) ($RightPath|Resolve-PathImproved)
