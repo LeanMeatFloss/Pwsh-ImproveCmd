@@ -79,6 +79,29 @@ Describe "Rename-ItemToBak"{
         Should -Invoke -ModuleName PwshImproveCmd-Basic -CommandName 'Test-Path' -Times 1 -ParameterFilter {$PesterBoundParameters["Path"]-eq "testhelper.bak"}
     }
 }
+Describe "Import-ModuleFromGallery"{
+    BeforeAll{
+        
+    }
+    It "Test Install UnExisted Module"{        
+        Mock -ModuleName PwshImproveCmd-Basic Get-InstalledModule{
+            return @{Version="1.3.4"}
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Find-Module{
+            return @{Version="1.3.4"}
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Update-Module{
+            
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Import-Module{
+            
+        }
+        Import-ModuleFromGallery -ModuleName "Test"
+        Should -Not -Invoke Update-Module -ModuleName PwshImproveCmd-Basic 
+        Should -Invoke Get-InstalledModule  -ModuleName PwshImproveCmd-Basic
+        Should -Invoke Find-Module -ModuleName PwshImproveCmd-Basic
+    }
+}
 AfterAll{
 
 }

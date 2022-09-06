@@ -132,13 +132,13 @@ function Import-ModuleFromGallery{
         $Force
     )
     process{
-        if(Get-Module $ModuleName){
+        if(Get-InstalledModule $ModuleName){
 
         }
         else{
             Install-Module $ModuleName -Force -Scope CurrentUser
         }
-        $currentVersion=(Get-Module $ModuleName).Version
+        $currentVersion=(Get-InstalledModule $ModuleName).Version
         $cloudVersion=(Find-Module $ModuleName).Version
         if($currentVersion -ne $cloudVersion){
             Update-Module $ModuleName
