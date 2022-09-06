@@ -83,7 +83,7 @@ Describe "Import-ModuleFromGallery"{
     BeforeAll{
         
     }
-    It "Test Install UnExisted Module"{        
+    It "Module shall not be updated if version not update"{        
         Mock -ModuleName PwshImproveCmd-Basic Get-InstalledModule{
             return @{Version="1.3.4"}
         }
@@ -100,6 +100,76 @@ Describe "Import-ModuleFromGallery"{
         Should -Not -Invoke Update-Module -ModuleName PwshImproveCmd-Basic 
         Should -Invoke Get-InstalledModule  -ModuleName PwshImproveCmd-Basic
         Should -Invoke Find-Module -ModuleName PwshImproveCmd-Basic
+        Should -Invoke Import-Module -ModuleName PwshImproveCmd-Basic
+    }
+    It "Module shall be updated if version not match"{        
+        Mock -ModuleName PwshImproveCmd-Basic Get-InstalledModule{
+            return @{Version="1.3.4"}
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Find-Module{
+            return @{Version="1.3.6"}
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Update-Module{
+            
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Import-Module{
+            
+        }
+        Import-ModuleFromGallery -ModuleName "Test"
+        Should -Invoke Update-Module -ModuleName PwshImproveCmd-Basic 
+        Should -Invoke Get-InstalledModule  -ModuleName PwshImproveCmd-Basic
+        Should -Invoke Find-Module -ModuleName PwshImproveCmd-Basic
+        Should -Invoke Import-Module -ModuleName PwshImproveCmd-Basic
+    }
+    It "Module shall be installed if module not existed"{      
+        $script:CalledTimes=0  
+        Mock -ModuleName PwshImproveCmd-Basic Get-InstalledModule{
+            if($script:CalledTimes -eq 0){
+                $script:CalledTimes++
+                return
+            }
+            else{
+                return @{Version="1.3.4"}
+            }
+            
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Find-Module{
+            return @{Version="1.3.4"}
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Update-Module{
+            
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Install-Module{
+            
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Import-Module{
+            
+        }
+        Import-ModuleFromGallery -ModuleName "Test"
+        Should -Not -Invoke Update-Module -ModuleName PwshImproveCmd-Basic 
+        Should -Invoke Get-InstalledModule  -ModuleName PwshImproveCmd-Basic -Times 2
+        Should -Invoke Find-Module -ModuleName PwshImproveCmd-Basic
+        Should -Invoke Install-Module -ModuleName PwshImproveCmd-Basic
+        Should -Invoke Import-Module -ModuleName PwshImproveCmd-Basic
+    }
+    It "Force shall be passed to Import-Module"{
+        Mock -ModuleName PwshImproveCmd-Basic Get-InstalledModule{
+            return @{Version="1.3.4"}
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Find-Module{
+            return @{Version="1.3.4"}
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Update-Module{
+            
+        }
+        Mock -ModuleName PwshImproveCmd-Basic Import-Module{
+            
+        }
+        Import-ModuleFromGallery -ModuleName "Test" -Force
+        Should -Not -Invoke Update-Module -ModuleName PwshImproveCmd-Basic 
+        Should -Invoke Get-InstalledModule  -ModuleName PwshImproveCmd-Basic
+        Should -Invoke Find-Module -ModuleName PwshImproveCmd-Basic
+        Should -Invoke Import-Module -ModuleName PwshImproveCmd-Basic -ParameterFilter {$PesterBoundParameters["Force"]}
     }
 }
 AfterAll{
