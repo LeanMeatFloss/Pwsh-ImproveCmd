@@ -129,7 +129,9 @@ function Import-ModuleFromGallery{
         [string]
         $ModuleName,
         [switch]
-        $Force
+        $Force,
+        [string]
+        $Version
     )
     process{
         if(Get-InstalledModule $ModuleName){
@@ -191,7 +193,7 @@ function Get-EnvironmentVariable{
         $Name
     )
     process{
-        Get-Item -Path "Env:\$Name"
+        (Get-Item -Path "Env:\$Name")
     }
 }
 function Set-EnvironmentVariable{
@@ -216,7 +218,7 @@ function Add-ModulePathToEnv{
     )
     process{
         $value="PSModulePath"|Get-EnvironmentVariable
-        $paths=[System.Collections.ArrayList]$value.Split("[IO.Path]::PathSeparator")
+        $paths=[System.Collections.ArrayList]($value.Split("[IO.Path]::PathSeparator"))
         $overWrite=$false
         if($paths.Contains($Path)){
             if($First){
